@@ -1,14 +1,16 @@
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
+import { parseCookies } from 'nookies';
 import { FormEvent, useContext, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext';
 import styles from '../styles/Home.module.css'
+import { withSSRGuest } from '../utils/withSSRGuest';
 
-const Home: NextPage = () => {
+export const Home: NextPage = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const {isAuthenticated, signIn} = useContext(AuthContext)
+  const { signIn } = useContext(AuthContext);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -32,4 +34,12 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export const getServerSideProps = withSSRGuest(async (context) => {
+  
+  return {
+    props: {
+      
+    }
+  }
+})
+
