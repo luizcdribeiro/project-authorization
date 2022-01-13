@@ -47,11 +47,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     authChannel = new BroadcastChannel('auth'); 
     authChannel.onmessage = (message) => {
       switch (message.data) {
-        case 'signOut':
+        case "signOut":
           signOut();
+          authChannel.close();
+          break;
+        case "signIn":   window.location.replace("http://localhost:3000/dashboard");
           break;
         default:
-          break
+          break;
       }
     }
   }, [])
@@ -99,6 +102,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
       Router.push('/dashboard');
+      authChannel.postMessage('signIn');
     } catch(err) {
       console.log(err)
     }
